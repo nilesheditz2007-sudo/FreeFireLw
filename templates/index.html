@@ -1,129 +1,1754 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DVX Dashboard</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:#eef2ff}
-    .wrap{max-width:1200px;margin:auto;padding:24px}
-    h1{margin:0 0 6px}.muted{color:#9aa4bd}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
-    .card{background:#121a2e;border:1px solid #263250;border-radius:14px;padding:18px}
-    .num{font-size:28px;font-weight:700;margin-top:8px}
-    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
-    input,button{border-radius:9px;border:1px solid #33415f;padding:10px 12px;background:#0f1729;color:#fff}
-    button{cursor:pointer}.primary{background:#315efb;border-color:#315efb}
-    .danger{background:#9f2d3f;border-color:#9f2d3f}
-    table{width:100%;border-collapse:collapse;background:#121a2e;border-radius:14px;overflow:hidden}
-    th,td{padding:11px;border-bottom:1px solid #263250;text-align:left;font-size:14px}
-    th{color:#aeb9d2}.pill{padding:4px 8px;border-radius:20px;background:#173b2b;color:#8df0b0}
-    .logs{max-height:260px;overflow:auto}.log{padding:8px 0;border-bottom:1px solid #263250}
-    @media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:500px){.grid{grid-template-columns:1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RED LUCKY XYZ | Level Up Bot</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+    --bg:#04232e;
+    --card:#061f2c;
+    --card2:#082b38;
+    --cyan:#18def2;
+    --cyan2:#2bbce9;
+    --green:#22e0cf;
+    --red:#ff5275;
+    --text:#f3fbff;
+    --muted:#8ba9b7;
+    --border:rgba(31,218,238,.22);
+    --glow:0 12px 35px rgba(0,220,240,.12);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Outfit',sans-serif;
+}
+
+html{
+    background:var(--bg);
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    overflow-x:hidden;
+    padding:28px;
+    background:
+        radial-gradient(circle at 8% 8%,rgba(0,239,255,.18),transparent 28%),
+        radial-gradient(circle at 94% 25%,rgba(0,185,205,.14),transparent 30%),
+        radial-gradient(circle at 15% 80%,rgba(0,255,226,.10),transparent 28%),
+        radial-gradient(circle at 90% 92%,rgba(0,126,173,.18),transparent 30%),
+        linear-gradient(180deg,#052530,#063440 50%,#05232e);
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.4;
+    background-image:
+        radial-gradient(circle at 18% 20%,rgba(78,235,255,.55) 0 1px,transparent 2px),
+        radial-gradient(circle at 72% 16%,rgba(78,235,255,.45) 0 1px,transparent 2px),
+        radial-gradient(circle at 35% 62%,rgba(78,235,255,.32) 0 1px,transparent 2px),
+        radial-gradient(circle at 88% 70%,rgba(78,235,255,.42) 0 1px,transparent 2px);
+    background-size:210px 210px,290px 290px,250px 250px,320px 320px;
+}
+
+.container{
+    position:relative;
+    z-index:1;
+    max-width:1440px;
+    margin:auto;
+}
+
+/* HEADER */
+
+header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:24px 28px;
+    margin-bottom:24px;
+    border-radius:31px;
+    border:1px solid var(--border);
+    background:linear-gradient(145deg,rgba(7,39,54,.97),rgba(3,24,36,.97));
+    box-shadow:
+        0 18px 42px rgba(0,0,0,.2),
+        0 0 35px rgba(0,225,245,.07),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    backdrop-filter:blur(18px);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:17px;
+}
+
+.logo-box{
+    width:66px;
+    height:66px;
+    min-width:66px;
+    border-radius:21px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#54edff;
+    font-size:27px;
+    border:1px solid rgba(35,222,242,.34);
+    background:linear-gradient(145deg,rgba(17,215,238,.34),rgba(2,83,105,.42));
+    box-shadow:
+        0 0 0 7px rgba(12,194,220,.045),
+        0 0 28px rgba(0,226,246,.32),
+        inset 0 0 20px rgba(20,221,240,.12);
+    animation:logoGlow 3s infinite alternate;
+}
+
+@keyframes logoGlow{
+    from{box-shadow:0 0 18px rgba(0,226,246,.22)}
+    to{box-shadow:0 0 32px rgba(0,226,246,.48)}
+}
+
+.brand-text h1{
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:-.3px;
+    color:#fff;
+}
+
+.brand-text h1 span{
+    color:#8faebb!important;
+}
+
+.brand-text p{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:5px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.live-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 11px;
+    border-radius:20px;
+    color:#22e3d4;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    background:rgba(21,224,213,.08);
+    border:1px solid rgba(21,224,213,.27);
+}
+
+.pulse-dot{
+    width:7px;
+    height:7px;
+    min-width:7px;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 0 10px currentColor;
+    animation:blink 1.2s infinite;
+}
+
+@keyframes blink{
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:.35;transform:scale(.8)}
+}
+
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* BUTTONS */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:50px;
+    padding:11px 19px;
+    border-radius:17px;
+    border:1px solid transparent;
+    outline:none;
+    cursor:pointer;
+    color:var(--text);
+    font-size:15px;
+    font-weight:600;
+    transition:.25s ease;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-primary{
+    color:#03202a;
+    background:linear-gradient(135deg,#24c4e8,#0bcfe4);
+    border-color:rgba(107,241,255,.72);
+    box-shadow:0 5px 20px rgba(0,215,241,.2);
+}
+
+.btn-secondary{
+    color:#bdeef7;
+    background:rgba(7,50,65,.68);
+    border-color:rgba(41,210,235,.36);
+}
+
+/* STATS */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:26px;
+}
+
+.stat-card{
+    min-height:138px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:25px 28px;
+    border-radius:31px;
+    border:1px solid rgba(36,207,229,.20);
+    background:linear-gradient(145deg,rgba(5,31,44,.97),rgba(3,22,34,.96));
+    box-shadow:
+        0 14px 34px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.025);
+    transition:.3s ease;
+}
+
+.stat-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(42,222,239,.55);
+    box-shadow:0 15px 38px rgba(0,0,0,.2),0 0 28px rgba(0,220,240,.08);
+}
+
+.stat-icon{
+    width:74px;
+    height:74px;
+    min-width:74px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:22px;
+    font-size:30px;
+    border:1px solid rgba(41,218,236,.20);
+}
+
+.stat-icon.cyan{
+    color:#1edff1;
+    background:rgba(0,213,236,.08);
+}
+
+.stat-icon.green{
+    color:#28e2d1;
+    background:rgba(15,224,207,.07);
+}
+
+.stat-icon.purple{
+    color:#47c5f2;
+    background:rgba(37,157,225,.08);
+}
+
+.stat-icon.amber{
+    color:#42d9e9;
+    background:rgba(40,203,218,.07);
+}
+
+.stat-content h3{
+    color:#fff;
+    font-size:31px;
+    line-height:1.05;
+    font-weight:800;
+}
+
+.stat-content p{
+    margin-top:6px;
+    color:#8da8b7;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.45px;
+    text-transform:uppercase;
+}
+
+/* MAIN */
+
+.dashboard-main{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:24px;
+}
+
+.card-box{
+    padding:25px;
+    border-radius:31px;
+    border:1px solid rgba(38,209,231,.20);
+    background:linear-gradient(145deg,rgba(5,31,44,.96),rgba(3,21,33,.96));
+    box-shadow:
+        0 15px 38px rgba(0,0,0,.17),
+        inset 0 1px 0 rgba(255,255,255,.025);
+    backdrop-filter:blur(16px);
+}
+
+.box-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.box-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#effcff;
+    font-size:18px;
+    font-weight:700;
+}
+
+/* ACCOUNTS */
+
+.accounts-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.account-card{
+    position:relative;
+    overflow:hidden;
+    padding:20px;
+    border-radius:22px;
+    border:1px solid rgba(39,202,224,.16);
+    background:linear-gradient(145deg,rgba(6,37,51,.80),rgba(3,25,37,.82));
+    box-shadow:inset 0 0 24px rgba(0,217,239,.025);
+    transition:.25s ease;
+}
+
+.account-card:hover{
+    background:rgba(6,38,52,.92);
+    border-color:rgba(42,221,239,.48);
+}
+
+.acc-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.acc-profile{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.acc-avatar{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    color:var(--cyan);
+    font-size:18px;
+    background:linear-gradient(145deg,#0b4254,#08303f);
+    border:1px solid rgba(22,220,239,.28);
+    box-shadow:0 0 18px rgba(0,220,239,.08);
+}
+
+.acc-info h4{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+}
+
+.acc-info span{
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+}
+
+.region-badge{
+    padding:2px 7px;
+    border-radius:6px;
+    color:#8fe4f2;
+    font-size:10px;
+    background:rgba(255,255,255,.07);
+}
+
+.acc-status{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-online{
+    color:#27e1cd;
+    background:rgba(0,255,136,.08);
+    border:1px solid rgba(0,255,136,.22);
+}
+
+.status-match{
+    color:var(--cyan);
+    background:rgba(0,242,254,.08);
+    border:1px solid rgba(0,242,254,.35);
+    animation:pulseBorder 1.5s infinite alternate;
+}
+
+@keyframes pulseBorder{
+    from{border-color:rgba(0,242,254,.3)}
+    to{border-color:rgba(0,242,254,.8)}
+}
+
+/* EXP */
+
+.exp-box{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+    padding:12px 16px;
+    margin-bottom:14px;
+    border-radius:12px;
+    background:rgba(0,8,14,.27);
+    border:1px solid rgba(255,255,255,.035);
+}
+
+.exp-item{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.exp-label{
+    color:var(--muted);
+    font-size:11px;
+    font-weight:600;
+    text-transform:uppercase;
+}
+
+.exp-val{
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    font-family:'JetBrains Mono',monospace;
+}
+
+.exp-gained{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    color:#25e1ce!important;
+}
+
+.gained-badge{
+    padding:2px 7px;
+    border-radius:6px;
+    color:#24e1cf;
+    font-size:12px;
+    font-weight:700;
+    background:rgba(0,255,136,.10);
+}
+
+.level-progress{
+    margin-bottom:14px;
+}
+
+.level-labels{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.progress-bar-bg{
+    height:7px;
+    overflow:hidden;
+    position:relative;
+    border-radius:10px;
+    background:rgba(255,255,255,.075);
+}
+
+.progress-bar-fill{
+    height:100%;
+    border-radius:10px;
+    background:linear-gradient(90deg,#16dff3,#1bded0);
+    box-shadow:0 0 12px rgba(18,223,238,.35);
+    transition:width .5s ease;
+}
+
+.acc-actions{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-top:10px;
+    border-top:1px solid rgba(255,255,255,.05);
+    color:var(--muted);
+    font-size:12px;
+}
+
+.action-btns{
+    display:flex;
+    gap:8px;
+}
+
+.icon-btn{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    cursor:pointer;
+    color:#9cc4cf;
+    background:rgba(5,57,72,.42);
+    border:1px solid rgba(37,204,226,.22);
+    transition:.2s;
+}
+
+.icon-btn:hover{
+    color:#28e3f2;
+    background:rgba(0,210,235,.12);
+    border-color:#25dcec;
+}
+
+.icon-btn.danger:hover{
+    color:#ff5275;
+    background:rgba(255,82,117,.12);
+    border-color:#ff5275;
+}
+
+/* LOGS */
+
+.logs-box{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+
+.log-stream{
+    flex:1;
+    min-height:480px;
+    max-height:600px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:14px;
+    border-radius:18px;
+    background:rgba(1,13,20,.72);
+    border:1px solid rgba(40,204,226,.12);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+}
+
+.log-stream::-webkit-scrollbar{
+    width:5px;
+}
+
+.log-stream::-webkit-scrollbar-thumb{
+    border-radius:5px;
+    background:rgba(50,220,240,.18);
+}
+
+.log-item{
+    line-height:1.4;
+    word-break:break-all;
+}
+
+.log-time{
+    margin-right:6px;
+    color:#557381;
+}
+
+.log-info{color:#35c9ed}
+.log-success{color:#32dfb5}
+.log-warning{color:#f0c95c}
+.log-error{color:#ff6c83}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(1,12,18,.84);
+    backdrop-filter:blur(10px);
+}
+
+.modal-overlay.active{
+    display:flex;
+}
+
+.modal-card{
+    width:100%;
+    max-width:480px;
+    padding:28px;
+    border-radius:27px;
+    border:1px solid rgba(40,211,232,.28);
+    background:linear-gradient(145deg,#082938,#041b28);
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.52),
+        0 0 35px rgba(0,214,235,.08);
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.modal-header h3{
+    font-size:18px;
+    font-weight:700;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
+}
+
+.form-input{
+    width:100%;
+    padding:11px 14px;
+    outline:none;
+    color:#fff;
+    border-radius:13px;
+    border:1px solid rgba(37,195,218,.18);
+    background:rgba(1,17,26,.72);
+    font-size:14px;
+    transition:.2s;
+}
+
+.form-input:focus{
+    border-color:#21ddeb;
+    box-shadow:0 0 0 3px rgba(22,221,235,.08);
+}
+
+textarea.form-input{
+    resize:vertical;
+}
+
+.empty-state{
+    padding:50px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty-state i{
+    display:block;
+    margin-bottom:13px;
+    color:rgba(50,220,240,.18);
+    font-size:42px;
+}
+
+/* TABLET / MOBILE */
+
+@media(max-width:1024px){
+    .stats-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .dashboard-main{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    body{
+        padding:14px 28px 28px;
+    }
+
+    header{
+        flex-direction:column;
+        align-items:stretch;
+        gap:24px;
+        padding:26px;
+        border-radius:32px;
+    }
+
+    .brand{
+        gap:15px;
+    }
+
+    .brand-text{
+        min-width:0;
+    }
+
+    .brand-text h1{
+        font-size:19px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+    .brand-text h1 span{
+        font-size:15px!important;
+    }
+
+    .header-actions{
+        width:100%;
+        gap:12px;
+    }
+
+    .header-actions .btn{
+        flex:1;
+        min-width:0;
+        height:55px;
+        border-radius:18px;
+    }
+
+    .header-actions .btn-primary{
+        order:1;
+    }
+
+    .header-actions .btn-secondary{
+        order:2;
+    }
+
+    .stats-grid{
+        grid-template-columns:1fr;
+        gap:18px;
+        margin-bottom:20px;
+    }
+
+    .stat-card{
+        min-height:142px;
+        padding:25px 30px;
+        border-radius:31px;
+    }
+
+    .stat-icon{
+        width:70px;
+        height:70px;
+        min-width:70px;
+        border-radius:21px;
+    }
+
+    .stat-content h3{
+        font-size:30px;
+    }
+
+    .dashboard-main{
+        grid-template-columns:1fr;
+        gap:20px;
+    }
+
+    .card-box{
+        padding:22px;
+        border-radius:31px;
+    }
+
+    .log-stream{
+        min-height:340px;
+        max-height:520px;
+    }
+
+    .acc-top{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .acc-status{
+        margin-left:66px;
+    }
+
+    .exp-box{
+        grid-template-columns:1fr;
+        gap:10px;
+    }
+}
+
+@media(max-width:430px){
+    body{
+        padding-left:16px;
+        padding-right:16px;
+    }
+
+    header{
+        padding-left:21px;
+        padding-right:21px;
+    }
+
+    .logo-box{
+        width:58px;
+        height:58px;
+        min-width:58px;
+        border-radius:18px;
+        font-size:23px;
+    }
+
+    .brand-text h1{
+        font-size:17px;
+    }
+
+    .brand-text h1 span{
+        font-size:13px!important;
+    }
+
+    .stat-card{
+        padding-left:23px;
+        padding-right:23px;
+    }
+
+    .modal-card{
+        padding:21px;
+    }
+}
+</style>
 </head>
+
 <body>
-<div class="wrap">
-  <h1>DVX Dashboard</h1>
-  <div class="muted">Account and EXP monitoring dashboard</div>
 
-  <div class="grid">
-    <div class="card"><div class="muted">Accounts</div><div id="accounts" class="num">0</div></div>
-    <div class="card"><div class="muted">Matches</div><div id="matches" class="num">0</div></div>
-    <div class="card"><div class="muted">Gained EXP</div><div id="exp" class="num">0</div></div>
-    <div class="card"><div class="muted">Uptime</div><div id="uptime" class="num">0s</div></div>
-  </div>
+<div class="container">
 
-  <div class="card">
-    <h2>Account Management</h2>
-    <div class="toolbar">
-      <input id="uid" placeholder="UID">
-      <input id="password" type="password" placeholder="Password">
-      <button class="primary" onclick="addAccount()">Add Account</button>
-      <input id="token" placeholder="Token">
-      <button class="primary" onclick="addToken()">Add Token</button>
+<header>
+    <div class="brand">
+
+        <div class="logo-box">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
+
+        <div class="brand-text">
+
+            <h1>
+                RED LUCKY XYZ
+                <span style="font-weight:400;font-size:16px;">
+                    LEVEL UP BOT
+                </span>
+            </h1>
+
+            <p>
+                <span class="live-tag">
+                    <span class="pulse-dot"></span>
+                    System Live
+                </span>
+
+                <span>• Safe Multi-Match Engine</span>
+            </p>
+
+        </div>
     </div>
-    <div id="msg" class="muted"></div>
-  </div>
 
-  <div class="card" style="margin-top:14px">
-    <h2>Accounts</h2>
-    <div style="overflow:auto">
-      <table>
-        <thead><tr><th>UID</th><th>Nickname</th><th>Region</th><th>Level</th><th>EXP</th><th>Gained</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody id="accountRows"></tbody>
-      </table>
+    <div class="header-actions">
+
+        <button class="btn btn-secondary" onclick="fetchStats()">
+            <i class="fa-solid fa-rotate"></i>
+            Refresh
+        </button>
+
+        <button class="btn btn-primary" onclick="openAddModal()">
+            <i class="fa-solid fa-plus"></i>
+            Add Account
+        </button>
+
     </div>
-  </div>
+</header>
 
-  <div class="card" style="margin-top:14px">
-    <h2>Logs</h2>
-    <div id="logs" class="logs"></div>
-  </div>
+
+<!-- STATS -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-icon cyan">
+            <i class="fa-solid fa-users"></i>
+        </div>
+
+        <div class="stat-content">
+            <h3 id="stat-total-accounts">0</h3>
+            <p>Active Accounts</p>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon green">
+            <i class="fa-solid fa-angles-up"></i>
+        </div>
+
+        <div class="stat-content">
+            <h3 id="stat-total-exp" style="color:var(--green)">
+                +0 EXP
+            </h3>
+            <p>Total EXP Gained</p>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon purple">
+            <i class="fa-solid fa-gamepad"></i>
+        </div>
+
+        <div class="stat-content">
+            <h3 id="stat-total-matches">0</h3>
+            <p>Matches Completed</p>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon amber">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <div class="stat-content">
+            <h3 id="stat-uptime">00:00:00</h3>
+            <p>Bot Uptime</p>
+        </div>
+
+    </div>
+
 </div>
 
+
+<!-- MAIN -->
+
+<div class="dashboard-main">
+
+    <!-- ACCOUNTS -->
+
+    <div class="card-box">
+
+        <div class="box-header">
+
+            <div class="box-title">
+                <i class="fa-solid fa-user-astronaut"
+                   style="color:var(--cyan)">
+                </i>
+
+                <span>
+                    Live Accounts & EXP Monitor
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="accounts-list" id="accounts-container">
+
+            <div class="empty-state">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                <p>Loading active accounts...</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGS -->
+
+    <div class="card-box logs-box">
+
+        <div class="box-header">
+
+            <div class="box-title">
+
+                <i class="fa-solid fa-terminal"
+                   style="color:var(--green)">
+                </i>
+
+                <span>
+                    Live Match & Bot Logs
+                </span>
+
+            </div>
+
+            <span style="font-size:12px;color:var(--muted)">
+                Real-time
+            </span>
+
+        </div>
+
+
+        <div class="log-stream" id="log-stream">
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- ADD ACCOUNT MODAL -->
+
+<div class="modal-overlay" id="add-modal">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <h3>
+                <i class="fa-solid fa-user-plus"
+                   style="color:var(--cyan);margin-right:8px">
+                </i>
+
+                Add New Account
+            </h3>
+
+            <button class="icon-btn"
+                    onclick="closeAddModal()">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <form id="add-acc-form"
+              onsubmit="submitAddAccount(event)">
+
+            <div class="form-group">
+
+                <label>Account Type</label>
+
+                <select class="form-input"
+                        id="acc-type"
+                        onchange="toggleFormType()">
+
+                    <option value="guest">
+                        Guest Account (UID + Password)
+                    </option>
+
+                    <option value="token">
+                        Access Token
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div id="guest-fields">
+
+                <div class="form-group">
+
+                    <label>Guest UID</label>
+
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="acc-uid"
+                        placeholder="e.g. 7644913583">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Guest Password / Secret
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="acc-password"
+                        placeholder="e.g. LUCKY_LEVEL_UP_PASS">
+
+                </div>
+
+            </div>
+
+
+            <div id="token-fields"
+                 style="display:none">
+
+                <div class="form-group">
+
+                    <label>Access Token</label>
+
+                    <textarea
+                        class="form-input"
+                        id="acc-token"
+                        rows="3"
+                        placeholder="Paste access token here..."></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                justify-content:flex-end;
+                gap:10px;
+                margin-top:20px">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="closeAddModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    <i class="fa-solid fa-plus"></i>
+                    Save & Start
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
 <script>
-const $ = id => document.getElementById(id);
-function msg(t){ $("msg").textContent=t; setTimeout(()=>{$("msg").textContent=""},3000); }
-function esc(v){return String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function fmt(n){return Number(n||0).toLocaleString();}
 
-async function post(url, data){
-  const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  return r.json();
-}
-async function addAccount(){
-  const uid=$("uid").value.trim(), password=$("password").value.trim();
-  if(!uid||!password){msg("UID and password are required");return;}
-  const r=await post("/api/account/add",{uid,password});
-  msg(r.status==="ok"?"Account added":(r.error||"Request failed"));
-  if(r.status==="ok"){$("uid").value="";$("password").value="";load();}
-}
-async function addToken(){
-  const token=$("token").value.trim();
-  if(!token){msg("Token is required");return;}
-  const r=await post("/api/account/add",{token});
-  msg(r.status==="ok"?"Token added":(r.error||"Request failed"));
-  if(r.status==="ok"){$("token").value="";load();}
-}
-async function removeAccount(uid){
-  if(!confirm("Remove account "+uid+"?")) return;
-  const r=await post("/api/account/delete",{uid});
-  msg(r.status==="ok"?"Account removed":(r.error||"Request failed")); load();
-}
-async function refreshAccount(uid){
-  const r=await post("/api/account/refresh",{uid});
-  msg(r.status==="ok"?"Refresh requested":(r.error||"Request failed")); load();
-}
-function render(data){
-  $("accounts").textContent=fmt(data.total_accounts);
-  $("matches").textContent=fmt(data.total_matches);
-  $("exp").textContent=fmt(data.total_gained_exp);
-  $("uptime").textContent=fmt(data.uptime)+"s";
+let startTime = Date.now();
 
-  $("accountRows").innerHTML=(data.accounts||[]).map(a=>`
-    <tr>
-      <td>${esc(a.uid)}</td><td>${esc(a.nickname)}</td><td>${esc(a.region)}</td>
-      <td>${esc(a.level)}</td><td>${fmt(a.current_exp)}</td><td>${fmt(a.gained_exp)}</td>
-      <td><span class="pill">${esc(a.status)}</span></td>
-      <td><button onclick="refreshAccount('${esc(a.uid)}')">Refresh</button>
-      <button class="danger" onclick="removeAccount('${esc(a.uid)}')">Delete</button></td>
-    </tr>`).join("") || `<tr><td colspan="8" class="muted">No accounts registered.</td></tr>`;
 
-  $("logs").innerHTML=(data.logs||[]).slice().reverse().map(l=>
-    `<div class="log"><b>[${esc(l.time)}]</b> ${esc(l.message)}</div>`
-  ).join("") || `<div class="muted">No logs yet.</div>`;
+/* OPEN MODAL */
+
+function openAddModal(){
+
+    document
+        .getElementById('add-modal')
+        .classList.add('active');
+
 }
-async function load(){
-  try{
-    const r=await fetch("/api/stats",{cache:"no-store"});
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    render(await r.json());
-  }catch(e){msg("Dashboard API unavailable");}
+
+
+/* CLOSE MODAL */
+
+function closeAddModal(){
+
+    document
+        .getElementById('add-modal')
+        .classList.remove('active');
+
 }
-load(); setInterval(load,3000);
+
+
+/* ACCOUNT TYPE */
+
+function toggleFormType(){
+
+    const type =
+        document.getElementById('acc-type').value;
+
+    document.getElementById('guest-fields')
+        .style.display =
+        type === 'guest' ? 'block' : 'none';
+
+    document.getElementById('token-fields')
+        .style.display =
+        type === 'token' ? 'block' : 'none';
+
+}
+
+
+/* ADD ACCOUNT */
+
+async function submitAddAccount(e){
+
+    e.preventDefault();
+
+    const type =
+        document.getElementById('acc-type').value;
+
+    let payload = {};
+
+
+    if(type === 'guest'){
+
+        const uid =
+            document.getElementById('acc-uid')
+            .value
+            .trim();
+
+        const password =
+            document.getElementById('acc-password')
+            .value
+            .trim();
+
+
+        if(!uid || !password){
+
+            return alert(
+                'Please enter both UID and Password'
+            );
+
+        }
+
+
+        payload = {
+            uid,
+            password
+        };
+
+    }else{
+
+        const token =
+            document.getElementById('acc-token')
+            .value
+            .trim();
+
+
+        if(!token){
+
+            return alert(
+                'Please enter token'
+            );
+
+        }
+
+
+        payload = {
+            token
+        };
+
+    }
+
+
+    try{
+
+        const res =
+            await fetch(
+                '/api/account/add',
+                {
+                    method:'POST',
+
+                    headers:{
+                        'Content-Type':
+                            'application/json'
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+                }
+            );
+
+
+        const data =
+            await res.json();
+
+
+        if(data.status === 'ok'){
+
+            closeAddModal();
+
+            document
+                .getElementById('add-acc-form')
+                .reset();
+
+            fetchStats();
+
+        }else{
+
+            alert(
+                'Error adding account: ' +
+                (data.error || 'Unknown')
+            );
+
+        }
+
+    }catch(err){
+
+        alert(
+            'Request failed: ' + err
+        );
+
+    }
+
+}
+
+
+/* DELETE ACCOUNT */
+
+async function deleteAccount(uid){
+
+    if(
+        !confirm(
+            'Are you sure you want to remove account ' +
+            uid +
+            '?'
+        )
+    ){
+        return;
+    }
+
+
+    try{
+
+        await fetch(
+            '/api/account/delete',
+            {
+                method:'POST',
+
+                headers:{
+                    'Content-Type':
+                        'application/json'
+                },
+
+                body:
+                    JSON.stringify({uid})
+            }
+        );
+
+
+        fetchStats();
+
+    }catch(err){
+
+        console.error(err);
+
+    }
+
+}
+
+
+/* REFRESH ACCOUNT */
+
+async function refreshAccountInfo(uid){
+
+    try{
+
+        await fetch(
+            '/api/account/refresh',
+            {
+                method:'POST',
+
+                headers:{
+                    'Content-Type':
+                        'application/json'
+                },
+
+                body:
+                    JSON.stringify({uid})
+            }
+        );
+
+
+        fetchStats();
+
+    }catch(err){
+
+        console.error(err);
+
+    }
+
+}
+
+
+/* FETCH STATS */
+
+async function fetchStats(){
+
+    try{
+
+        const res =
+            await fetch('/api/stats');
+
+        const data =
+            await res.json();
+
+
+        document
+            .getElementById('stat-total-accounts')
+            .innerText =
+            data.total_accounts;
+
+
+        document
+            .getElementById('stat-total-exp')
+            .innerText =
+            '+' +
+            data.total_gained_exp
+                .toLocaleString() +
+            ' EXP';
+
+
+        document
+            .getElementById('stat-total-matches')
+            .innerText =
+            data.total_matches;
+
+
+        /* ACCOUNTS */
+
+        const container =
+            document.getElementById(
+                'accounts-container'
+            );
+
+
+        if(data.accounts.length === 0){
+
+            container.innerHTML = `
+
+                <div class="empty-state">
+
+                    <i class="fa-solid fa-ghost"></i>
+
+                    <p>
+                        No active accounts running.
+                        Click "+ Add Account" to start!
+                    </p>
+
+                </div>
+
+            `;
+
+        }else{
+
+            container.innerHTML =
+                data.accounts.map(acc => {
+
+                    const gainedExp =
+                        acc.gained_exp || 0;
+
+
+                    const statusClass =
+                        acc.status === 'IN_MATCH'
+                        ? 'status-match'
+                        : 'status-online';
+
+
+                    const statusText =
+                        acc.status === 'IN_MATCH'
+                        ? `In Match (${acc.active_matches} active)`
+                        : acc.status;
+
+
+                    return `
+
+                    <div class="account-card">
+
+                        <div class="acc-top">
+
+                            <div class="acc-profile">
+
+                                <div class="acc-avatar">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+
+
+                                <div class="acc-info">
+
+                                    <h4>
+
+                                        ${escapeHtml(acc.nickname)}
+
+                                        <span class="region-badge">
+                                            ${acc.region || 'BD'}
+                                        </span>
+
+                                    </h4>
+
+                                    <span>
+                                        UID: ${acc.uid}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="acc-status ${statusClass}">
+
+                                <span class="pulse-dot"></span>
+
+                                <span>
+                                    ${statusText}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="exp-box">
+
+                            <div class="exp-item">
+
+                                <span class="exp-label">
+                                    Initial EXP
+                                </span>
+
+                                <span class="exp-val">
+                                    ${acc.initial_exp.toLocaleString()}
+                                </span>
+
+                            </div>
+
+
+                            <div class="exp-item">
+
+                                <span class="exp-label">
+                                    Current EXP
+                                </span>
+
+                                <span class="exp-val">
+                                    ${acc.current_exp.toLocaleString()}
+                                </span>
+
+                            </div>
+
+
+                            <div class="exp-item">
+
+                                <span class="exp-label">
+                                    EXP Gained
+                                </span>
+
+                                <span class="exp-val exp-gained">
+
+                                    <span class="gained-badge">
+                                        +${gainedExp.toLocaleString()} EXP
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="level-progress">
+
+                            <div class="level-labels">
+
+                                <span style="color:var(--cyan)">
+                                    Level ${acc.level}
+                                </span>
+
+                                <span style="color:var(--muted)">
+                                    Matches: ${acc.matches_played}
+                                </span>
+
+                            </div>
+
+
+                            <div class="progress-bar-bg">
+
+                                <div
+                                    class="progress-bar-fill"
+                                    style="
+                                    width:${Math.min(
+                                        100,
+                                        Math.max(
+                                            15,
+                                            (acc.current_exp % 1000) / 10
+                                        )
+                                    )}%">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="acc-actions">
+
+                            <span>
+                                Last match:
+                                ${acc.last_match_time || 'Running...'}
+                            </span>
+
+
+                            <div class="action-btns">
+
+                                <button
+                                    class="icon-btn"
+                                    title="Refresh Profile/EXP"
+                                    onclick="refreshAccountInfo('${acc.uid}')">
+
+                                    <i class="fa-solid fa-rotate"></i>
+
+                                </button>
+
+
+                                <button
+                                    class="icon-btn danger"
+                                    title="Delete Account"
+                                    onclick="deleteAccount('${acc.uid}')">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    `;
+
+                }).join('');
+
+        }
+
+
+        /* LOGS */
+
+        const logContainer =
+            document.getElementById(
+                'log-stream'
+            );
+
+
+        logContainer.innerHTML =
+            data.logs.map(log => {
+
+                return `
+
+                    <div class="log-item">
+
+                        <span class="log-time">
+                            [${log.time}]
+                        </span>
+
+                        <span class="log-${log.level}">
+                            ${escapeHtml(log.message)}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }).join('');
+
+
+        logContainer.scrollTop =
+            logContainer.scrollHeight;
+
+
+    }catch(err){
+
+        console.error(
+            "Failed to fetch stats:",
+            err
+        );
+
+    }
+
+}
+
+
+/* HTML ESCAPE */
+
+function escapeHtml(text){
+
+    if(!text) return '';
+
+    return String(text)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+
+}
+
+
+/* UPTIME */
+
+setInterval(() => {
+
+    const sec =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+
+    const h =
+        String(
+            Math.floor(sec / 3600)
+        ).padStart(2,'0');
+
+
+    const m =
+        String(
+            Math.floor((sec % 3600) / 60)
+        ).padStart(2,'0');
+
+
+    const s =
+        String(
+            sec % 60
+        ).padStart(2,'0');
+
+
+    document
+        .getElementById('stat-uptime')
+        .innerText =
+        `${h}:${m}:${s}`;
+
+},1000);
+
+
+/* LIVE POLLING */
+
+fetchStats();
+
+setInterval(
+    fetchStats,
+    2500
+);
+
 </script>
+
 </body>
 </html>
